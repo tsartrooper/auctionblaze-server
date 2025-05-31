@@ -3,9 +3,9 @@ package com.example.auction_application.Authentication;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.auction_application.UserModule.UserRequestDTO;
-import com.example.auction_application.UserModule.UserService;
-import com.example.auction_application.UserModule.WebUser;
+import com.example.auction_application.UserModule.dto.UserRequestDTO;
+import com.example.auction_application.UserModule.entity.WebUser;
+import com.example.auction_application.UserModule.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
