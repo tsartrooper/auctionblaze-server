@@ -2,7 +2,7 @@
 FROM eclipse-temurin:17
 
 #Copying built jar into image
-ARG JAR_FILE=target/*.jar
+ARG JAR_FILE=auction_application/target/*.jar
 COPY ${JAR_FILE} app.jar
 
 EXPOSE 8080
