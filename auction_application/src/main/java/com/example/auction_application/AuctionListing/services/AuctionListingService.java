@@ -121,6 +121,13 @@ public class AuctionListingService {
         auctionListing.get().setAuctionStatus(Status.CLOSED);
 
         auctionListingRepository.save(auctionListing.get());
+
+        try{
+            auctionWebSocketHandler.broadcastUpdate(new AuctionListingResponseDTO(auctionListing.get()));
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
         
         return;
     }
@@ -131,8 +138,11 @@ public class AuctionListingService {
         Optional<AuctionListing> auctionListing = auctionListingRepository.findById(auctionId);
         
         if(!auctionListing.isPresent()) return;
-        
-        auctionListing.get().setAuctionStatus(Status.ACTIVE);
+
+        if(!auctionListing.get().getAuctionStatus().equals(Status.CLOSED)){
+            auctionListing.get().setAuctionStatus(Status.ACTIVE);
+            System.out.println("activating inside service");
+        }
 
         auctionListingRepository.save(auctionListing.get());
         try{

@@ -35,6 +35,10 @@ public class AuthController {
 
     @PostMapping("/login")
     public String login(@RequestBody AuthenticationRequestDTO authRequest) {
+
+        System.out.println("Login request received for user: " + authRequest.getUserName());
+        System.out.println("Password: " + authRequest.getPassword());
+        
         authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(authRequest.getUserName(), authRequest.getPassword()));
         

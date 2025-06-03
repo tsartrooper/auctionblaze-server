@@ -7,6 +7,9 @@ public class UserRequestDTO {
     private String userEmail;
     private String password;
 
+    public UserRequestDTO() {
+    }
+
     public UserRequestDTO(String userName, String userEmail, String password) {
         this.userName = userName;
         this.userEmail = userEmail;

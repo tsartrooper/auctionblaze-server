@@ -13,6 +13,9 @@ public class AuctionClosingJob implements Job{
 
     @Override
     public void execute(JobExecutionContext context){
+
+        System.out.println("Closing auction");
+
         Long auctionId = (Long) context.getJobDetail().getJobDataMap().get("auctionCloseId");
         auctionListingService.closeAuction(auctionId);
     }

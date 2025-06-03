@@ -12,8 +12,10 @@ public class AuctionActivationJob implements Job{
 
     @Override
     public void execute(JobExecutionContext context){
+        System.out.println("acticating auction");
         Long auctionId = (Long) context.getJobDetail().getJobDataMap().get("auctionActivationId");
         auctionListingService.activateAuction(auctionId);
+
     }   
     
 }
