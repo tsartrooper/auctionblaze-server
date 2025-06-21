@@ -13,6 +13,7 @@ com\example\auction_application\UserModule\service\UserService.class
 com\example\auction_application\Authentication\Config\SpringSecurityConfiguration.class
 com\example\auction_application\Bid\service\BidService.class
 com\example\auction_application\Bid\BidRepository.class
+com\example\auction_application\CorsConfig.class
 com\example\auction_application\Bid\dto\BidResponseDTO.class
 com\example\auction_application\AuctionListing\services\AuctionCatalogService.class
 com\example\auction_application\Bid\dto\BidRequestDTO.class
@@ -23,6 +24,7 @@ com\example\auction_application\Authentication\AuthController.class
 com\example\auction_application\AuctionListing\api\AuctionCatalogController.class
 com\example\auction_application\AuctionListing\dto\AuctionListingRequestDTO.class
 com\example\auction_application\AuctionListing\scheduler\AuctionClosingJob.class
+com\example\auction_application\CorsConfig$1.class
 com\example\auction_application\AuctionListing\entity\AuctionListing.class
 com\example\auction_application\Authentication\Config\SecurityConfigProperties.class
 com\example\auction_application\UserModule\UserRepository.class
