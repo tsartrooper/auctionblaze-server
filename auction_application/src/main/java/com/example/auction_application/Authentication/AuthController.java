@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -37,6 +38,9 @@ public class AuthController {
 
     @Autowired
     private JwtUtils jwtUtils;
+
+    @Value("${GOOGLE_TOKEN}")
+    private String googleToken;
 
     @PostMapping("/register")
     public ResponseEntity<String> createUser(@RequestBody UserRequestDTO userRequestDTO) {
@@ -77,17 +81,15 @@ public class AuthController {
         }
     }
 
-
+    
     @PostMapping("/google")
     public ResponseEntity<?> authenticateWithGoogle(@RequestBody Map<String, String> payload) {
         String googleToken = payload.get("token");
 
-        System.out.println("we got the token");
-
         try {
             GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(
                     new NetHttpTransport(), GsonFactory.getDefaultInstance())
-                .setAudience(Collections.singletonList("18033002194-3k2jhc6bk85lsahoe4ft4lq4cfto2c4r.apps.googleusercontent.com"))
+                .setAudience(Collections.singletonList(googleToken))
                 .build();
 
             GoogleIdToken idToken = verifier.verify(googleToken);
