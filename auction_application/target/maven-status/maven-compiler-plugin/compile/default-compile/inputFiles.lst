@@ -31,8 +31,8 @@ D:\spring_projects\Auction_Application_Monilith\auction_application\src\main\jav
 D:\spring_projects\Auction_Application_Monilith\auction_application\src\main\java\com\example\auction_application\Exceptions\GlobalExceptionHandler.java
 D:\spring_projects\Auction_Application_Monilith\auction_application\src\main\java\com\example\auction_application\Exceptions\UserAlreadyExistsException.java
 D:\spring_projects\Auction_Application_Monilith\auction_application\src\main\java\com\example\auction_application\UserModule\api\UserController.java
-D:\spring_projects\Auction_Application_Monilith\auction_application\src\main\java\com\example\auction_application\UserModule\dto\UserDTOResponse.java
 D:\spring_projects\Auction_Application_Monilith\auction_application\src\main\java\com\example\auction_application\UserModule\dto\UserRequestDTO.java
+D:\spring_projects\Auction_Application_Monilith\auction_application\src\main\java\com\example\auction_application\UserModule\dto\UserResponseDTO.java
 D:\spring_projects\Auction_Application_Monilith\auction_application\src\main\java\com\example\auction_application\UserModule\entity\WebUser.java
 D:\spring_projects\Auction_Application_Monilith\auction_application\src\main\java\com\example\auction_application\UserModule\service\UserService.java
 D:\spring_projects\Auction_Application_Monilith\auction_application\src\main\java\com\example\auction_application\UserModule\UserRepository.java
