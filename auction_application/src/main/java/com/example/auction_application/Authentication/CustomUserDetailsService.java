@@ -18,21 +18,20 @@ public class CustomUserDetailsService implements UserDetailsService{
     UserService userService;
 
     @Override
-    public UserDetails loadUserByUsername(String username){
-        WebUser user = userService.findByUserName(username);
+    public UserDetails loadUserByUsername(String email){
+        WebUser user = userService.findByEmail(email).orElse(null);
         if(user == null){
             throw new UsernameNotFoundException("User not found");
         }
-        
         return User.builder()
-                    .username(username)
-                    .password(user.getPassword())
+                    .username(email)
+                    .password(user.getPassword() != null? user.getPassword() : "")
                     .roles(user.getRole().replace("ROLE_", ""))
                     .build();
     }
 
-    public WebUser getUserByUsername(String username){
-        WebUser user = userService.findByUserName(username);
+    public WebUser getUserByUsername(String userEmail){
+        WebUser user = userService.findByEmail(userEmail).get();
         if(user == null){
             throw new UsernameNotFoundException("User not found");
         }

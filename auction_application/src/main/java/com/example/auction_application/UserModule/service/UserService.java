@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.auction_application.Bid.entity.Bid;
+import com.example.auction_application.Exceptions.UserAlreadyExistsException;
 import com.example.auction_application.UserModule.UserRepository;
 import com.example.auction_application.UserModule.dto.UserRequestDTO;
+import com.example.auction_application.UserModule.dto.UserResponseDTO;
 import com.example.auction_application.UserModule.entity.WebUser;
 
 import jakarta.transaction.Transactional;
@@ -21,18 +23,18 @@ public class UserService {
 
     @Transactional
     public String createUser(UserRequestDTO userRequestDTO){
-        try {
-            if(userRepository.findByUserName(userRequestDTO.getUserName()).isPresent()) return "user already exists.";
-            userRepository.save(userRequestDTO.getWebUser());
-            return "successfully created a user";   
-        } catch (Exception e) {
-            return e.getMessage();
+
+        if(userRepository.findByUserEmail(userRequestDTO.getUserEmail()).isPresent()){
+            throw new UserAlreadyExistsException("user with this email already exists.");
         }
+
+        userRepository.save(userRequestDTO.getWebUser());
+        return "successfully created a user";   
     }
 
     @Transactional
-    public void save(WebUser webUser){
-        userRepository.save(webUser);
+    public WebUser save(WebUser webUser){
+        return userRepository.save(webUser);
     }
 
     public List<WebUser> getUsers(){
@@ -58,11 +60,11 @@ public class UserService {
     }
 
     public WebUser findById(Long Id){
-        return userRepository.findById(Id).orElse(null);
+        return userRepository.findById(Id).get();
     }
 
-    public WebUser findByUserName(String userName) {
-        return userRepository.findByUserName(userName).orElse(null);
+    public Optional<WebUser> findByEmail(String email){
+        return userRepository.findByUserEmail(email);
     }
 
 }

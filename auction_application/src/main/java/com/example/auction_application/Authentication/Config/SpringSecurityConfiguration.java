@@ -32,7 +32,9 @@ public class SpringSecurityConfiguration {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
-        http.csrf(csrf -> {
+        http.cors()
+        .and()
+        .csrf(csrf -> {
                     if(!securityConfigProperties.isCsrfEnabled()){
                         csrf.disable();
                     }

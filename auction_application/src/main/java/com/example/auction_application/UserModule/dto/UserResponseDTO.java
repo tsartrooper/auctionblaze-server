@@ -2,15 +2,17 @@ package com.example.auction_application.UserModule.dto;
 
 import com.example.auction_application.UserModule.entity.WebUser;
 
-public class UserDTOResponse {
+public class UserResponseDTO {
     private Long id;
     private String userName;
     private String userEmail;
+    private String picture;
 
-    public UserDTOResponse(WebUser webUser){
+    public UserResponseDTO(WebUser webUser){
         this.id = webUser.getId();
         this.userEmail = webUser.getUserEmail();
         this.userName = webUser.getUserName();
+        this.picture = webUser.getPicture();
     }
 
     public Long getId() {
@@ -19,6 +21,14 @@ public class UserDTOResponse {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
     }
 
     public String getUserName() {

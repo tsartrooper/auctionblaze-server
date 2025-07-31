@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.cglib.core.Local;
+
 import com.example.auction_application.AuctionListing.Status;
 import com.example.auction_application.Bid.entity.Bid;
 import com.example.auction_application.UserModule.entity.WebUser;
@@ -30,10 +32,10 @@ public class AuctionListing {
     private String description;
     private String itemName;
     private LocalDateTime startTime;
-    private long duration;
     private double currentHighestBid;
     private LocalDateTime endTime;
     private String category;
+    private String picture;
 
     @Enumerated(EnumType.STRING)
     private Status auctionStatus; 
@@ -49,19 +51,17 @@ public class AuctionListing {
 
     public AuctionListing() {
     }
-    public AuctionListing(double startingPrice, String description, String itemName,
-            long duration, WebUser seller, String category, long startDelay) {
+    public AuctionListing(double startingPrice, String description, String itemName, WebUser seller, String category, LocalDateTime startTime, LocalDateTime endTime) {
         this.startingPrice = startingPrice;
         this.description = description;
         this.itemName = itemName;
-        this.duration = duration;
         this.currentHighestBid = startingPrice;
         this.seller = seller;
         this.auctionStatus = Status.ACTIVE;
         this.currentHighestBidder = seller;
-        this.endTime = LocalDateTime.now().plusMinutes(duration+startDelay);
+        this.endTime = endTime;
         this.category = category;
-        this.startTime = LocalDateTime.now().plusMinutes(startDelay);
+        this.startTime = startTime;
     }
 
     public Long getId() {
@@ -82,12 +82,13 @@ public class AuctionListing {
     public String getItemName() {
         return itemName;
     }
-    public long getDuration() {
-        return duration;
-    }
 
     public LocalDateTime getStartTime() {
         return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
     }
 
     public double getCurrentHighestBid() {
@@ -127,13 +128,6 @@ public class AuctionListing {
     public void setItemName(String itemName) {
         this.itemName = itemName;
     }
-    public void setDuration(long duration) {
-        this.duration = duration;
-    }
-
-    public void setStartTime(LocalDateTime startTime) {
-        this.startTime = startTime;
-    }
 
     public LocalDateTime getEndTime() {
         return endTime;
@@ -149,6 +143,15 @@ public class AuctionListing {
     public void setCategory(String category) {
         this.category = category;
     }
+    
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
+
 
     public void addBid(Bid bid) {
         this.bids.add(bid);

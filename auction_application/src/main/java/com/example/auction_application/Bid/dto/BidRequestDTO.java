@@ -5,13 +5,11 @@ import java.time.LocalDateTime;
 public class BidRequestDTO {
     private double amount;
     private LocalDateTime timeStamp;
-    private Long bidderId;
     private Long auctionListingId;
 
-    public BidRequestDTO(double amount, Long bidderId, Long auctionListingId){
+    public BidRequestDTO(double amount, Long auctionListingId){
         this.amount = amount;
         this.timeStamp = LocalDateTime.now();
-        this.bidderId = bidderId;
         this.auctionListingId = auctionListingId;
     }
     public BidRequestDTO(){}
@@ -30,14 +28,6 @@ public class BidRequestDTO {
 
     public void setTimeStamp(LocalDateTime timeStamp) {
         this.timeStamp = timeStamp;
-    }
-
-    public Long getBidderId() {
-        return bidderId;
-    }
-
-    public void setBidderId(Long bidderId) {
-        this.bidderId = bidderId;
     }
 
     public Long getAuctionListingId() {

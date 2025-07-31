@@ -17,7 +17,6 @@ public class AuctionListingResponseDTO implements Serializable {
     private double startingPrice;
     private String description;
     private String itemName;
-    private long duration;
     private Long sellerId;
     private List<BidResponseDTO> bids;
     private long currentHighestBidderId;
@@ -26,14 +25,15 @@ public class AuctionListingResponseDTO implements Serializable {
     private LocalDateTime startTime;
     private Status status;
     private String category;
+    private String picture;
 
     public AuctionListingResponseDTO(AuctionListing auctionListing){
         this.id = auctionListing.getId();
         this.startingPrice = auctionListing.getStartingPrice();
         this.description = auctionListing.getDescription();
         this.itemName = auctionListing.getItemName();
-        this.duration = auctionListing.getDuration();
         this.sellerId = auctionListing.getSeller().getId();
+        this.picture = auctionListing.getPicture();
         this.endTime = auctionListing.getEndTime();
         this.startTime = auctionListing.getStartTime();
         this.category = auctionListing.getCategory();
@@ -72,20 +72,20 @@ public class AuctionListingResponseDTO implements Serializable {
         this.itemName = itemName;
     }
 
-    public long getDuration() {
-        return duration;
-    }
-
-    public void setDuration(long duration) {
-        this.duration = duration;
-    }
-
     public Long getSellerId() {
         return sellerId;
     }
 
     public void setSellerId(Long sellerId) {
         this.sellerId = sellerId;
+    }
+
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
     }
 
     public List<BidResponseDTO> getBids() {

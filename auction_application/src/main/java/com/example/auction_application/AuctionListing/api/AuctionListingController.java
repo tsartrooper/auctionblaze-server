@@ -8,12 +8,14 @@ import com.example.auction_application.AuctionListing.dto.AuctionListingRequestD
 import com.example.auction_application.AuctionListing.dto.AuctionListingResponseDTO;
 import com.example.auction_application.AuctionListing.services.AuctionListingService;
 import com.example.auction_application.Authentication.JwtUtils;
+import com.google.api.client.http.HttpStatusCodes;
 
 import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,12 +38,16 @@ public class AuctionListingController {
     public ResponseEntity<?> createAuctionListing(@RequestBody AuctionListingRequestDTO auctionListingDTO,
                                                     HttpServletRequest request) throws Exception{
         System.out.println("\n Creating Auction Listing");
+
+        System.out.println("data:"+auctionListingDTO);
         
         String token = request.getHeader("Authorization");
 
         Long sellerId = jwtUtils.extractUserId(token.substring(7));
 
-        auctionListingService.createAuctionListing(auctionListingDTO, sellerId);
+        if(!auctionListingService.createAuctionListing(auctionListingDTO, sellerId)){
+            return ResponseEntity.status(HttpStatusCodes.STATUS_CODE_BAD_REQUEST).body("Bid is invalid.");
+        }
 
         return ResponseEntity.ok().build();
     }
@@ -59,6 +65,7 @@ public class AuctionListingController {
 
     @GetMapping("/auction")
     public AuctionListingResponseDTO searchAuctionById(@RequestParam(name="auctionId") Long id){
+        System.out.println("auctionId:"+id);
         return auctionListingService.getAuctionDTOById(id);
     }
 

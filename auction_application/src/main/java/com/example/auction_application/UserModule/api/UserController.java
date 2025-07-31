@@ -3,9 +3,12 @@ package com.example.auction_application.UserModule.api;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.auction_application.Authentication.JwtUtils;
 import com.example.auction_application.Bid.dto.BidResponseDTO;
-import com.example.auction_application.UserModule.dto.UserDTOResponse;
+import com.example.auction_application.UserModule.dto.UserResponseDTO;
 import com.example.auction_application.UserModule.service.UserService;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,14 +26,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 public class UserController {
 
     @Autowired
+    JwtUtils jwtUtils;
+
+    @Autowired
     UserService userService;
 
     @GetMapping
-    public List<UserDTOResponse> getUsers(){
+    public List<UserResponseDTO> getUsers(){
         return userService
                         .getUsers()
                         .stream()
-                        .map(UserDTOResponse::new)
+                        .map(UserResponseDTO::new)
                         .collect(Collectors.toList());
     }
 
@@ -39,12 +45,13 @@ public class UserController {
         userService.deleteAllUsers();
     }
 
-    @GetMapping("/{user_id}")
-    public List<BidResponseDTO> getBidsById(@PathVariable(name="user_id") Long user_id) {
-        return userService
-                        .getBidsByUserId(user_id)
-                        .stream()
-                        .map(BidResponseDTO::new)
-                        .collect(Collectors.toList());
+    @GetMapping("/profile")
+    public UserResponseDTO getBidsById(HttpServletRequest request) {
+
+        String token = request.getHeader("Authorization");
+
+        Long user_id = jwtUtils.extractUserId(token.substring(7));
+
+        return new UserResponseDTO(userService.findById(user_id));
     }
 }

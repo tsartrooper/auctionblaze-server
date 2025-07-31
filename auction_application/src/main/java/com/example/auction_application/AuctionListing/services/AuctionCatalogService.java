@@ -19,7 +19,7 @@ public class AuctionCatalogService {
     @Autowired
     AuctionListingRepository auctionListingRepository;
 
-    @Cacheable(value = "auctions", key = "'auctions:'+#pageable.pageNumber+#pageable.pageSize")
+    @Cacheable(value = "auctions", key = "'Auctions:'+#pageable.pageNumber+#pageable.pageSize")
     public Page<AuctionListingResponseDTO> getAuctions(Pageable pageable){
         return auctionListingRepository.findAll(pageable)
                                         .map(AuctionListingResponseDTO::new);
@@ -27,7 +27,7 @@ public class AuctionCatalogService {
 
     @Cacheable(value = "activeAuctions", key = "'Active:'+#pageable.pageNumber+#pageable.pageSize")
     public Page<AuctionListingResponseDTO> getActiveAuctions(Pageable pageable){
-        return auctionListingRepository.findByAuctionStatus(pageable, Status.ACTIVE)
+        return auctionListingRepository.findByAuctionStatus(Status.ACTIVE, pageable)
                                         .map(AuctionListingResponseDTO::new);
     }
 

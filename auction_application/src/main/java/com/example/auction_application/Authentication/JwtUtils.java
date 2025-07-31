@@ -19,11 +19,9 @@ public class JwtUtils {
         this.jwtConfigProperties = jwtConfigProperties;
     }
 
-    private static final Key secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-
-    public String generateToken(String username, Long userId){
+    public String generateToken(String userEmail, Long userId){
         return Jwts.builder()
-        .setSubject(username)
+        .setSubject(userEmail)
         .claim("userId", userId)
         .setIssuedAt(new Date(System.currentTimeMillis()))
         .setExpiration(new Date(System.currentTimeMillis() + jwtConfigProperties.getExpirationLimit()))
@@ -39,9 +37,9 @@ public class JwtUtils {
         return Jwts.parser().setSigningKey(Keys.hmacShaKeyFor(jwtConfigProperties.getSecret().getBytes())).parseClaimsJws(token).getBody();
     }
 
-    public boolean validateToken(String token, String username) {
-        String tokenUsername = extractClaims(token).getSubject();
-        return (username.equals(tokenUsername) && !isTokenExpired(token));
+    public boolean validateToken(String token, String userEmail) {
+        String tokenUserEmail = extractClaims(token).getSubject();
+        return (userEmail.equals(tokenUserEmail) && !isTokenExpired(token));
     }
 
     private boolean isTokenExpired(String token) {

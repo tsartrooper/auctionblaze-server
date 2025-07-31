@@ -1,20 +1,29 @@
 package com.example.auction_application.AuctionListing.dto;
 
+import java.time.LocalDateTime;
+import java.util.Date;
+
+import org.springframework.cglib.core.Local;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class AuctionListingRequestDTO {
     private double startingPrice;
     private String description;
     private String itemName;
-    private long duration;
-    private long startDelay;
     private String category;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
+    private String picture;
 
-    public AuctionListingRequestDTO(double startingPrice, String description, String itemName, long duration, String category, long startDelay) {
+    public AuctionListingRequestDTO(double startingPrice, String description, String itemName, String category, LocalDateTime endTime, LocalDateTime startTime, String picture) {
         this.startingPrice = startingPrice;
         this.description = description;
         this.itemName = itemName;
-        this.duration = duration;
         this.category = category;
-        this.startDelay = startDelay;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.picture = picture;
     }
 
     public AuctionListingRequestDTO() {
@@ -38,19 +47,28 @@ public class AuctionListingRequestDTO {
     public void setItemName(String itemName) {
         this.itemName = itemName;
     }
-    public long getDuration() {
-        return duration;
+
+    public LocalDateTime getEndTime(){
+        return this.endTime;
     }
-    public void setDuration(long duration) {
-        this.duration = duration;
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
     }
 
-    public long getStartDelay() {
-        return startDelay;
+    public LocalDateTime getStartTime() {
+        return this.startTime;
     }
 
-    public void setStartDelay(long startDelay) {
-        this.startDelay = startDelay;
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
     }
 
     public String getCategory() {
@@ -60,4 +78,17 @@ public class AuctionListingRequestDTO {
     public void setCategory(String category) {
         this.category = category;
     }
+
+    @Override
+    public String toString(){
+        return "AuctionListingRequestDTO{" +
+                "startingPrice=" + startingPrice +
+                ", description='" + description + '\'' +
+                ", itemName='" + itemName + '\'' +
+                ", category='" + category + '\'' +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                '}';
+    }
+
 }

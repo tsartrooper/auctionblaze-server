@@ -39,24 +39,24 @@ public class AuctionListingService {
 
     @Transactional
     @CacheEvict(value = {"auctions", "activeAuctions", "closedAuctions", "categoryAuctions", "sellerAuctions", "status", "auction"}, allEntries = true) 
-    public void createAuctionListing(AuctionListingRequestDTO auctionListingDTO, Long sellerId) throws IOException{
+    public boolean createAuctionListing(AuctionListingRequestDTO auctionListingDTO, Long sellerId) throws IOException{
         System.out.println("\n user id: " + sellerId);
         WebUser seller = userService.findById(sellerId);
 
-        if(seller == null) return;
+        if(seller == null) return false;
 
         AuctionListing auctionListing = new AuctionListing();
 
         auctionListing.setStartingPrice(auctionListingDTO.getStartingPrice());
         auctionListing.setDescription(auctionListingDTO.getDescription());
         auctionListing.setItemName(auctionListingDTO.getItemName());
-        auctionListing.setDuration(auctionListingDTO.getDuration());
         auctionListing.setSeller(seller);
-        auctionListing.setStartTime(LocalDateTime.now().plusMinutes(auctionListingDTO.getStartDelay()));
+        auctionListing.setStartTime(auctionListingDTO.getStartTime());
         auctionListing.setAuctionStatus(Status.SCHEDULED);
         auctionListing.setCurrentHighestBid(auctionListingDTO.getStartingPrice());
-        auctionListing.setEndTime(LocalDateTime.now().plusMinutes(auctionListing.getDuration()+auctionListingDTO.getStartDelay()));
+        auctionListing.setEndTime(auctionListingDTO.getEndTime());
         auctionListing.setCategory(auctionListingDTO.getCategory());
+        auctionListing.setPicture(auctionListingDTO.getPicture());
 
         auctionListingRepository.save(auctionListing);
         seller.getSellingAuctions().add(auctionListing);
@@ -75,7 +75,7 @@ public class AuctionListingService {
             e.printStackTrace();
         }
 
-        return;
+        return true;
     }
 
     @Transactional
@@ -84,7 +84,7 @@ public class AuctionListingService {
         auctionListingRepository.save(auctionListing);
     }
 
-    @Cacheable(value = "auctions", key = "'auctions:'+#pageable.pageNumber+#pageable.pageSize")
+    @Cacheable(value = "auctions", key = "'auctions'")
     public Page<AuctionListingResponseDTO> getAuctionListings(Pageable pageable){
         return auctionListingRepository.findAll(pageable)
                                         .map(AuctionListingResponseDTO::new);

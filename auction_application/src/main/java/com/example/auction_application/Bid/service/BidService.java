@@ -38,19 +38,22 @@ public class BidService {
 
     @Transactional
     @CacheEvict(value = {"auctions", "activeAuctions", "closedAuctions", "categoryAuctions", "sellerAuctions", "status", "auction"}, allEntries = true)
-    public void createBid(BidRequestDTO bidDTO){
-        WebUser bidder = userRepository.findById(bidDTO.getBidderId()).get();
+    public boolean createBid(BidRequestDTO bidDTO, Long bidderId){
+        WebUser bidder = userRepository.findById(bidderId).get();
         
         Optional<AuctionListing> auctionListing = auctionListingRepository
-                                            .findById(bidDTO.getAuctionListingId());
+                                            .findByIdWithLock(bidDTO.getAuctionListingId());
 
         if(bidder == null || !auctionListing.isPresent()){
-            return;
+            return false;
         }
+
+        WebUser highestBidder = auctionListing.get().getCurrentHighestBidder();
 
 
         if(auctionListing.get().getAuctionStatus() == Status.CLOSED
-        || auctionListing.get().getCurrentHighestBid() >= bidDTO.getAmount()) return;
+        || auctionListing.get().getCurrentHighestBid() >= bidDTO.getAmount()
+        || highestBidder != null && highestBidder.getId()==bidder.getId()) return false;
         auctionListing.get().setCurrentHighestBid(bidDTO.getAmount());
         auctionListing.get().setCurrentHighestBidder(bidder);
 
@@ -72,6 +75,8 @@ public class BidService {
         catch (Exception e){
             e.printStackTrace();
         }
+
+        return true;
     }
 
     public List<Bid> getAllBids(){

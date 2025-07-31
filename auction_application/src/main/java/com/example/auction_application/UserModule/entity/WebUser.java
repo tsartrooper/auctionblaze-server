@@ -24,14 +24,20 @@ public class WebUser {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = false, nullable = false)
     private String userName;
 
     @Column(unique = true, nullable = false)
     private String userEmail;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String password;
+
+    @Column(nullable = true)
+    private String picture;
+
+    @Column(nullable = true)
+    private String authProvider;
 
     @Column(nullable = false)
     private String role;
@@ -82,6 +88,14 @@ public class WebUser {
         this.password = password;
     }
 
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
+
     public String getRole() {
         return role;
     }
@@ -113,4 +127,13 @@ public class WebUser {
     public void setBiddingAuctions(List<AuctionListing> biddingAuctions) {
         this.biddingAuctions = biddingAuctions;
     }
+
+    public String getAuthProvider() {
+        return authProvider;
+    }
+
+    public void setAuthProvider(String authProvider) {
+        this.authProvider = authProvider;
+    }
+
 }
