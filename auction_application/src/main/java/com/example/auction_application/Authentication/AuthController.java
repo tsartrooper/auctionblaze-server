@@ -40,7 +40,7 @@ public class AuthController {
     private JwtUtils jwtUtils;
 
     @Value("${GOOGLE_TOKEN}")
-    private String googleToken;
+    private String serverGoogleToken;
 
     @PostMapping("/register")
     public ResponseEntity<String> createUser(@RequestBody UserRequestDTO userRequestDTO) {
@@ -89,7 +89,7 @@ public class AuthController {
         try {
             GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(
                     new NetHttpTransport(), GsonFactory.getDefaultInstance())
-                .setAudience(Collections.singletonList(googleToken))
+                .setAudience(Collections.singletonList(serverGoogleToken))
                 .build();
 
             GoogleIdToken idToken = verifier.verify(googleToken);
