@@ -8,10 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
-import com.example.auction_application.AuctionListing.AuctionListingRepository;
 import com.example.auction_application.AuctionListing.Status;
 import com.example.auction_application.AuctionListing.dto.AuctionListingResponseDTO;
 import com.example.auction_application.AuctionListing.entity.AuctionListing;
+import com.example.auction_application.AuctionListing.repository.AuctionListingRepository;
 import com.example.auction_application.AuctionListing.services.AuctionWebSocketHandler;
 import com.example.auction_application.Bid.BidRepository;
 import com.example.auction_application.Bid.dto.BidRequestDTO;

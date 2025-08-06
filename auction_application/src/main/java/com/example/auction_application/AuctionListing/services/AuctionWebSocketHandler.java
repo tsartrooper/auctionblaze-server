@@ -15,8 +15,8 @@
     import org.springframework.web.socket.handler.TextWebSocketHandler;
     import org.springframework.web.util.UriComponentsBuilder;
 
-import com.example.auction_application.AuctionListing.AuctionListingRepository;
 import com.example.auction_application.AuctionListing.dto.AuctionListingResponseDTO;
+import com.example.auction_application.AuctionListing.repository.AuctionListingRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.transaction.Transactional;

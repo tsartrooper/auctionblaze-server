@@ -1,7 +1,6 @@
 package com.example.auction_application.AuctionListing.dto;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,8 +20,8 @@ public class AuctionListingResponseDTO implements Serializable {
     private List<BidResponseDTO> bids;
     private long currentHighestBidderId;
     private double currentHighestBid;
-    private LocalDateTime endTime;
-    private LocalDateTime startTime;
+    private String endTime;
+    private String startTime;
     private Status status;
     private String category;
     private String picture;
@@ -34,8 +33,8 @@ public class AuctionListingResponseDTO implements Serializable {
         this.itemName = auctionListing.getItemName();
         this.sellerId = auctionListing.getSeller().getId();
         this.picture = auctionListing.getPicture();
-        this.endTime = auctionListing.getEndTime();
-        this.startTime = auctionListing.getStartTime();
+        this.endTime = auctionListing.getEndTime().toString();
+        this.startTime = auctionListing.getStartTime().toString();
         this.category = auctionListing.getCategory();
         if(auctionListing.getCurrentHighestBidder() != null){
             this.currentHighestBidderId = auctionListing.getCurrentHighestBidder().getId();
@@ -112,19 +111,19 @@ public class AuctionListingResponseDTO implements Serializable {
         this.currentHighestBid = currentHighestBid;
     }
 
-    public LocalDateTime getStartTime() {
+    public String getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(LocalDateTime startTime) {
+    public void setStartTime(String startTime) {
         this.startTime = startTime;
     }
 
-    public LocalDateTime getEndTime() {
+    public String getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(LocalDateTime endTime) {
+    public void setEndTime(String endTime) {
         this.endTime = endTime;
     }
 

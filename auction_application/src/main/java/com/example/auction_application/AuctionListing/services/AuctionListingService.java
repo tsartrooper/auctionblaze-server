@@ -12,11 +12,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.example.auction_application.AuctionListing.AuctionListingRepository;
 import com.example.auction_application.AuctionListing.Status;
 import com.example.auction_application.AuctionListing.dto.AuctionListingRequestDTO;
 import com.example.auction_application.AuctionListing.dto.AuctionListingResponseDTO;
 import com.example.auction_application.AuctionListing.entity.AuctionListing;
+import com.example.auction_application.AuctionListing.repository.AuctionListingRepository;
 import com.example.auction_application.AuctionListing.scheduler.AuctionListingSchedulerService;
 import com.example.auction_application.UserModule.entity.WebUser;
 import com.example.auction_application.UserModule.service.UserService;

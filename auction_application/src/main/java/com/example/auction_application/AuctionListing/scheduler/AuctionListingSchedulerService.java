@@ -1,6 +1,7 @@
 package com.example.auction_application.AuctionListing.scheduler;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -25,9 +26,8 @@ public class AuctionListingSchedulerService {
     Scheduler scheduler;
 
     @CacheEvict(value = {"auctions", "activeAuctions", "closedAuctions", "categoryAuctions", "sellerAuctions", "status", "auction"}, allEntries = true) 
-    public void scheduleAuctionClosing(Long auctionId, LocalDateTime endTime){
+    public void scheduleAuctionClosing(Long auctionId, Instant endTime){
 
-        ZonedDateTime zonedEndTime = endTime.atZone(ZoneId.systemDefault());
 
         JobDetail jobDetail = JobBuilder.newJob(AuctionClosingJob.class)
                                             .withIdentity("auctionClosingJob-"+auctionId)
@@ -42,10 +42,10 @@ public class AuctionListingSchedulerService {
 
         Trigger trigger = TriggerBuilder.newTrigger()
                                         .withIdentity("auctionClosingTrigger-"+auctionId)
-                                        .startAt(Date.from(zonedEndTime.toInstant()))
+                                        .startAt(Date.from(endTime))
                                         .build();
 
-    System.out.println("Scheduling auction activation for auction ID: " + auctionId + " at " + zonedEndTime);
+    System.out.println("Scheduling auction activation for auction ID: " + auctionId + " at " + endTime+":UTC");
 
         try {
             scheduler.scheduleJob(jobDetail, trigger);
@@ -56,9 +56,9 @@ public class AuctionListingSchedulerService {
     }
 
     @CacheEvict(value = {"auctions", "activeAuctions", "closedAuctions", "categoryAuctions", "sellerAuctions", "status", "auction"}, allEntries = true)
-    public void scheduleAuctionActivation(Long auctionId, LocalDateTime startTime){
+    public void scheduleAuctionActivation(Long auctionId, Instant startTime){
 
-        ZonedDateTime zonedStartTime = startTime.atZone(ZoneId.systemDefault());
+        System.out.println("Scheduling auction activation for auction ID: " + auctionId + " at " + startTime+":UTC");
 
         JobDetail jobDetail = JobBuilder.newJob(AuctionActivationJob.class)
                                             .withIdentity("auctionStartJob-"+auctionId)
@@ -70,10 +70,8 @@ public class AuctionListingSchedulerService {
 
         Trigger trigger = TriggerBuilder.newTrigger()
                                         .withIdentity("auctionActivationTrigger-"+auctionId)
-                                        .startAt(Date.from(zonedStartTime.toInstant()))
+                                        .startAt(Date.from(startTime))
                                         .build();
-
-        System.out.println("Scheduling auction activation for auction ID: " + auctionId + " at " + zonedStartTime);
         
         try {
             scheduler.scheduleJob(jobDetail, trigger);

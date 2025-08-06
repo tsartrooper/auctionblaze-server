@@ -1,28 +1,25 @@
 package com.example.auction_application.AuctionListing.dto;
 
-import java.time.LocalDateTime;
-import java.util.Date;
-
-import org.springframework.cglib.core.Local;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
+import java.time.Instant;
 
 public class AuctionListingRequestDTO {
     private double startingPrice;
     private String description;
     private String itemName;
     private String category;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
+    private Instant startTime;
+    private Instant endTime;
     private String picture;
 
-    public AuctionListingRequestDTO(double startingPrice, String description, String itemName, String category, LocalDateTime endTime, LocalDateTime startTime, String picture) {
+    public AuctionListingRequestDTO(double startingPrice, String description, String itemName, String category, String endTime, String startTime, String picture) {
+
+        System.out.println("start time: "+startTime+" Instant start time: "+Instant.parse(startTime));
         this.startingPrice = startingPrice;
         this.description = description;
         this.itemName = itemName;
         this.category = category;
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this.startTime = Instant.parse(startTime);
+        this.endTime = Instant.parse(endTime);
         this.picture = picture;
     }
 
@@ -48,14 +45,14 @@ public class AuctionListingRequestDTO {
         this.itemName = itemName;
     }
 
-    public LocalDateTime getEndTime(){
+    public Instant getEndTime(){
         return this.endTime;
     }
-    public void setEndTime(LocalDateTime endTime) {
+    public void setEndTime(Instant endTime) {
         this.endTime = endTime;
     }
 
-    public LocalDateTime getStartTime() {
+    public Instant getStartTime() {
         return this.startTime;
     }
 
@@ -67,7 +64,7 @@ public class AuctionListingRequestDTO {
         this.picture = picture;
     }
 
-    public void setStartTime(LocalDateTime startTime) {
+    public void setStartTime(Instant startTime) {
         this.startTime = startTime;
     }
 

@@ -1,6 +1,6 @@
 package com.example.auction_application.AuctionListing.entity;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,9 +31,9 @@ public class AuctionListing {
     private double startingPrice;
     private String description;
     private String itemName;
-    private LocalDateTime startTime;
+    private Instant startTime;
     private double currentHighestBid;
-    private LocalDateTime endTime;
+    private Instant endTime;
     private String category;
     private String picture;
 
@@ -51,7 +51,7 @@ public class AuctionListing {
 
     public AuctionListing() {
     }
-    public AuctionListing(double startingPrice, String description, String itemName, WebUser seller, String category, LocalDateTime startTime, LocalDateTime endTime) {
+    public AuctionListing(double startingPrice, String description, String itemName, WebUser seller, String category, Instant startTime, Instant endTime) {
         this.startingPrice = startingPrice;
         this.description = description;
         this.itemName = itemName;
@@ -83,26 +83,30 @@ public class AuctionListing {
         return itemName;
     }
 
-    public LocalDateTime getStartTime() {
+    public Instant getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(LocalDateTime startTime) {
+    public void setStartTime(Instant startTime) {
         this.startTime = startTime;
     }
 
     public double getCurrentHighestBid() {
         return currentHighestBid;
     }
+
     public void setCurrentHighestBid(double currentHighestBid) {
         this.currentHighestBid = currentHighestBid;
     }
+
     public WebUser getCurrentHighestBidder() {
         return currentHighestBidder;
     }
+
     public void setCurrentHighestBidder(WebUser currentHighestBidder) {
         this.currentHighestBidder = currentHighestBidder;
     }
+
     public WebUser getSeller() {
         return seller;
     }
@@ -110,30 +114,34 @@ public class AuctionListing {
     public void setSeller(WebUser seller) {
         this.seller = seller;
     }
+
     public List<Bid> getBids() {
         return bids;
     }
     public void setBids(List<Bid> bids) {
         this.bids = bids;
     }
+
     public Status getAuctionStatus() {
         return auctionStatus;
     }
+
     public void setAuctionStatus(Status auctionStatus) {
         this.auctionStatus = auctionStatus;
     }
     public void setDescription(String description) {
         this.description = description;
     }
+
     public void setItemName(String itemName) {
         this.itemName = itemName;
     }
 
-    public LocalDateTime getEndTime() {
+    public Instant getEndTime() {
         return endTime;
     }
     
-    public void setEndTime(LocalDateTime endTime) {
+    public void setEndTime(Instant endTime) {
         this.endTime = endTime;
     }  
     public String getCategory() {
