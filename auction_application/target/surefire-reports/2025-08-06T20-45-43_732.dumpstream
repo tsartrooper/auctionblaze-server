@@ -1,5 +1,0 @@
-# Created at 2025-08-06T20:45:44.063
-Boot Manifest-JAR contains absolute paths in classpath 'D:\spring_projects\Auction_Application_Monilith\auction_application\target\test-classes'
-Hint: <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
-'other' has different root
-

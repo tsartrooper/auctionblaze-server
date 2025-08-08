@@ -35,6 +35,7 @@ com\example\auction_application\Config\JacksonConfig.class
 com\example\auction_application\Authentication\CustomUserDetailsService.class
 com\example\auction_application\WebSocketConfig.class
 com\example\auction_application\AuctionListing\services\AuctionWebSocketHandler.class
+com\example\auction_application\AuctionListing\specification\AuctionSpecifications.class
 com\example\auction_application\UserModule\api\UserController.class
 com\example\auction_application\AuctionListing\repository\AuctionListingRepository.class
 com\example\auction_application\AuctionListing\dto\AuctionListingResponseDTO.class
