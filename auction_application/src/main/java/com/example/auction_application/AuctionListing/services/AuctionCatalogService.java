@@ -7,11 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.example.auction_application.AuctionListing.Status;
 import com.example.auction_application.AuctionListing.dto.AuctionListingResponseDTO;
+import com.example.auction_application.AuctionListing.entity.AuctionListing;
 import com.example.auction_application.AuctionListing.repository.AuctionListingRepository;
+import com.example.auction_application.AuctionListing.specification.AuctionSpecifications;
 
 @Service
 public class AuctionCatalogService {
@@ -48,4 +51,18 @@ public class AuctionCatalogService {
         return auctionListingRepository.findBySellerId(id, pageable)
                                         .map(AuctionListingResponseDTO::new);
     }
+
+    @Cacheable(value = "auctionsFiltered", key = "'AuctionsFiltered:'+#pageable.pageNumber+#pageable.pageSize+#category+#status+#minPrice+#maxPrice")
+    public Page<AuctionListingResponseDTO> getAuctionsFiltered(Pageable pageable, String category, String status, Double minPrice, Double maxPrice, String keyword){
+        
+        Specification<AuctionListing> filters = Specification.allOf(
+            AuctionSpecifications.hasCategory(category),
+            AuctionSpecifications.priceBetween(minPrice, maxPrice),
+            AuctionSpecifications.hasKeyword(keyword),
+            AuctionSpecifications.hasStatus(status)
+        );      
+        
+        return auctionListingRepository.findAll(filters, pageable).map(k -> new AuctionListingResponseDTO(k));
+    }
+
 }
