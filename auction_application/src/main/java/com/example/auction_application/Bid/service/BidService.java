@@ -2,7 +2,6 @@ package com.example.auction_application.Bid.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -20,71 +19,80 @@ import com.example.auction_application.UserModule.UserRepository;
 import com.example.auction_application.UserModule.entity.WebUser;
 
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class BidService {
 
     @Autowired
-    BidRepository bidRepository;
+    private BidRepository bidRepository;
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    AuctionListingRepository auctionListingRepository;
+    private AuctionListingRepository auctionListingRepository;
 
     @Autowired
-    AuctionWebSocketHandler auctionWebSocketHandler;
+    private AuctionWebSocketHandler auctionWebSocketHandler;
 
     @Transactional
-    @CacheEvict(value = {"auctions", "auctionsFiltered", "activeAuctions", "closedAuctions", "categoryAuctions", "sellerAuctions", "status", "auction"}, allEntries = true)
-    public boolean createBid(BidRequestDTO bidDTO, Long bidderId){
-        WebUser bidder = userRepository.findById(bidderId).get();
-        
-        Optional<AuctionListing> auctionListing = auctionListingRepository
-                                            .findByIdWithLock(bidDTO.getAuctionListingId());
+    @CacheEvict(
+        value = {"auctions", "auctionsFiltered", "activeAuctions", "closedAuctions", "categoryAuctions", "sellerAuctions", "status", "auction"},
+        allEntries = true
+    )
+    public void createBid(BidRequestDTO bidDTO, Long bidderId) throws Exception {
+        try {
+            WebUser bidder = userRepository.findById(bidderId)
+                    .orElseThrow(() -> new IllegalArgumentException("Bidder not found with ID: " + bidderId));
 
-        if(bidder == null || !auctionListing.isPresent()){
-            return false;
+            AuctionListing auctionListing = auctionListingRepository
+                    .findByIdWithLock(bidDTO.getAuctionListingId())
+                    .orElseThrow(() -> new IllegalArgumentException("AuctionListing not found with ID: " + bidDTO.getAuctionListingId()));
+
+            WebUser highestBidder = auctionListing.getCurrentHighestBidder();
+
+            if (auctionListing.getAuctionStatus() == Status.CLOSED) {
+                throw new IllegalStateException("Cannot place bid: Auction is closed");
+            }
+            if (auctionListing.getCurrentHighestBid() >= bidDTO.getAmount()) {
+                throw new IllegalArgumentException("Bid amount must be higher than current highest bid");
+            }
+            if (highestBidder != null && highestBidder.getId().equals(bidderId)) {
+                throw new IllegalArgumentException("Bidder is already the highest bidder");
+            }
+
+            // Update auction listing
+            auctionListing.setCurrentHighestBid(bidDTO.getAmount());
+            auctionListing.setCurrentHighestBidder(bidder);
+
+            // Create bid
+            Bid bid = new Bid();
+            bid.setAmount(bidDTO.getAmount());
+            bid.setAuctionListing(auctionListing);
+            bid.setBidder(bidder);
+            bid.setTimeStamp(LocalDateTime.now());
+
+            auctionListing.addBid(bid);
+
+            bidRepository.save(bid);
+            auctionListingRepository.save(auctionListing);
+
+            // Broadcast update
+            auctionWebSocketHandler.broadcastUpdate(new AuctionListingResponseDTO(auctionListing));
+
+        } catch (Exception e) {
+            log.error("Error creating bid", e);
+            throw e;  // rethrow so the caller knows
         }
-
-        WebUser highestBidder = auctionListing.get().getCurrentHighestBidder();
-
-
-        if(auctionListing.get().getAuctionStatus() == Status.CLOSED
-        || auctionListing.get().getCurrentHighestBid() >= bidDTO.getAmount()
-        || highestBidder != null && highestBidder.getId()==bidder.getId()) return false;
-        auctionListing.get().setCurrentHighestBid(bidDTO.getAmount());
-        auctionListing.get().setCurrentHighestBidder(bidder);
-
-        Bid bid = new Bid();
-
-        bid.setAmount(bidDTO.getAmount());
-        bid.setAuctionListing(auctionListing.get());
-        bid.setBidder(bidder);
-        bid.setTimeStamp(LocalDateTime.now());
-
-        auctionListing.get().addBid(bid);
-
-        bidRepository.save(bid);
-        auctionListingRepository.save(auctionListing.get());
-
-        try{
-            auctionWebSocketHandler.broadcastUpdate(new AuctionListingResponseDTO(auctionListing.get()));
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-
-        return true;
     }
 
-    public List<Bid> getAllBids(){
+    public List<Bid> getAllBids() {
         return bidRepository.findAll();
     }
 
-    public List<Bid> getBidsByBidderId(Long bidderID){
-        return bidRepository.findByBidderId(bidderID);
+    public List<Bid> getBidsByBidderId(Long bidderId) {
+        return bidRepository.findByBidderId(bidderId);
     }
-    
 }

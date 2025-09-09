@@ -41,11 +41,18 @@ public class BidController {
         
         String token = request.getHeader("Authorization");
 
-        Long bidderId = jwtUtils.extractUserId(token.substring(7));
+        try{
+            Long bidderId = jwtUtils.extractUserId(token.substring(7));
 
-        if(bidService.createBid(bidDTO, bidderId)) return ResponseEntity.ok().build();
+            bidService.createBid(bidDTO, bidderId);
+            
+            return ResponseEntity.ok().build();
 
-        return ResponseEntity.status(HttpStatusCodes.STATUS_CODE_BAD_REQUEST).body("Bid is invalid.");
+            }
+        catch(Exception e){
+            System.out.println("error: "+e.getMessage());
+            return ResponseEntity.status(HttpStatusCodes.STATUS_CODE_BAD_REQUEST).body(e.getMessage());
+        }
     }  
 
     @GetMapping

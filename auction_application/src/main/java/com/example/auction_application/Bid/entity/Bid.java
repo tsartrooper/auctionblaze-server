@@ -28,9 +28,9 @@ public class Bid {
 
     public Bid(){}
 
-    public Bid(Long id, WebUser bidder, double amount){
+    public Bid(Long id, AuctionListing auctionListing, WebUser bidder, double amount){
         this.amount = amount;
-        this.id = id;
+        this.auctionListing = auctionListing;
         this.bidder = bidder;
         this.timeStamp = LocalDateTime.now();
 
