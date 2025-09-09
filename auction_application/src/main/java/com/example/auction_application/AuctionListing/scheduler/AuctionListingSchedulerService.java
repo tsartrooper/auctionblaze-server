@@ -1,14 +1,8 @@
 package com.example.auction_application.AuctionListing.scheduler;
 
-import java.sql.Timestamp;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.Date;
-import java.util.logging.Logger;
 
-import org.hibernate.annotations.Cache;
 import org.quartz.JobBuilder;
 import org.quartz.JobDetail;
 import org.quartz.Scheduler;
@@ -50,7 +44,6 @@ public class AuctionListingSchedulerService {
         try {
             scheduler.scheduleJob(jobDetail, trigger);
         } catch (SchedulerException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -76,7 +69,6 @@ public class AuctionListingSchedulerService {
         try {
             scheduler.scheduleJob(jobDetail, trigger);
         } catch (SchedulerException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();}
     }
 }

@@ -55,13 +55,7 @@ public class AuctionListingController {
     @GetMapping
     public Page<AuctionListingResponseDTO> getAllAuctions(Pageable pageable){
         return auctionListingService.getAuctionListings(pageable);
-    }
-
-    @DeleteMapping
-    public void deleteAllAuctions(){
-        auctionListingService.deleteAllAuctions();
-        return;
-    }    
+    }   
 
     @GetMapping("/auction")
     public AuctionListingResponseDTO searchAuctionById(@RequestParam(name="auctionId") Long id){

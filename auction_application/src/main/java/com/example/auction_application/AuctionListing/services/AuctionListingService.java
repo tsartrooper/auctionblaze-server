@@ -1,8 +1,6 @@
 package com.example.auction_application.AuctionListing.services;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +9,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.auction_application.AuctionListing.Status;
 import com.example.auction_application.AuctionListing.dto.AuctionListingRequestDTO;
@@ -20,8 +19,6 @@ import com.example.auction_application.AuctionListing.repository.AuctionListingR
 import com.example.auction_application.AuctionListing.scheduler.AuctionListingSchedulerService;
 import com.example.auction_application.UserModule.entity.WebUser;
 import com.example.auction_application.UserModule.service.UserService;
-
-import jakarta.transaction.Transactional;
 
 @Service
 public class AuctionListingService {
@@ -37,8 +34,8 @@ public class AuctionListingService {
     @Autowired
     AuctionWebSocketHandler auctionWebSocketHandler;
 
-    @Transactional
-    @CacheEvict(value = {"auctions", "activeAuctions", "closedAuctions", "categoryAuctions", "sellerAuctions", "status", "auction"}, allEntries = true) 
+    @Transactional(rollbackFor = Exception.class)
+    @CacheEvict(value = {"auctions", "auctionsFiltered", "activeAuctions", "closedAuctions", "categoryAuctions", "sellerAuctions", "status", "auction"}, allEntries = true) 
     public boolean createAuctionListing(AuctionListingRequestDTO auctionListingDTO, Long sellerId) throws IOException{
         System.out.println("\n user id: " + sellerId);
         WebUser seller = userService.findById(sellerId);
@@ -78,8 +75,7 @@ public class AuctionListingService {
         return true;
     }
 
-    @Transactional
-    @CacheEvict(value = {"auctions", "activeAuctions", "closedAuctions", "categoryAuctions", "sellerAuctions", "status", "auction"}, allEntries = true) 
+    @CacheEvict(value = {"auctions","auctionsFiltered", "activeAuctions", "closedAuctions", "categoryAuctions", "sellerAuctions", "status", "auction"}, allEntries = true) 
     public void save(AuctionListing auctionListing){
         auctionListingRepository.save(auctionListing);
     }
@@ -90,6 +86,7 @@ public class AuctionListingService {
                                         .map(AuctionListingResponseDTO::new);
     }
 
+    @Transactional(readOnly=true)
     @Cacheable(value = "auction", key = "'auction_id:'+#id")
     public AuctionListing getAuctionListingById(Long id){
         Optional<AuctionListing> auctionListing = auctionListingRepository.findById(id);
@@ -98,21 +95,14 @@ public class AuctionListingService {
         return auctionListing.get();
     }    
 
+    @Transactional(readOnly = true) 
     @Cacheable(value = "status", key = "#status + #pageable.pageNumber+#pageable.pageSize")
     public Page<AuctionListing> getByAuctionStatus(Status status, Pageable pageable){
         return auctionListingRepository.findByAuctionStatus(status, pageable);
     }
 
-    @Transactional
-    @CacheEvict(value = {"auctions", "activeAuctions", "closedAuctions", "categoryAuctions", "sellerAuctions", "status", "auction"}, allEntries = true) 
-    public void deleteAllAuctions(){
-        auctionListingRepository.deleteAll();
-        
-        return;
-    }
-
-    @Transactional
-    @CacheEvict(value = {"auctions", "activeAuctions", "closedAuctions", "categoryAuctions", "sellerAuctions", "status", "auction"}, allEntries = true) 
+    @Transactional(rollbackFor = Exception.class)
+    @CacheEvict(value = {"auctions", "activeAuctions", "auctionsFiltered", "closedAuctions", "categoryAuctions", "sellerAuctions", "status", "auction"}, allEntries = true) 
     public void closeAuction(Long auctionId){
         Optional<AuctionListing> auctionListing = auctionListingRepository.findById(auctionId);
         
@@ -132,8 +122,8 @@ public class AuctionListingService {
         return;
     }
 
-    @Transactional
-    @CacheEvict(value = {"auctions", "activeAuctions", "closedAuctions", "categoryAuctions", "sellerAuctions", "status", "auction"}, allEntries = true) 
+    @Transactional(rollbackFor = Exception.class)
+    @CacheEvict(value = {"auctions", "activeAuctions", "auctionsFiltered", "closedAuctions", "categoryAuctions", "sellerAuctions", "status", "auction"}, allEntries = true) 
     public void activateAuction(Long auctionId) {
         Optional<AuctionListing> auctionListing = auctionListingRepository.findById(auctionId);
         

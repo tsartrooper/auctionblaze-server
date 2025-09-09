@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.auction_application.AuctionListing.dto.AuctionListingResponseDTO;
 import com.example.auction_application.AuctionListing.services.AuctionCatalogService;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 @RestController
@@ -46,4 +48,18 @@ public class AuctionCatalogController {
                                                                     Pageable pageable) {
         return auctionCatalogService.getAuctionBySellerId(sellerId, pageable);
     }   
+
+    @GetMapping("/auctions-filtered")
+    public Page<AuctionListingResponseDTO> getMethodName(
+        @PageableDefault(page = 0, size = 20, sort = "id") Pageable pageable,
+        @RequestParam(required=false) String status,
+        @RequestParam(required=false) Double minPrice,
+        @RequestParam(required=false) Double maxPrice,
+        @RequestParam(required=false) String category,
+        @RequestParam(required=false) String keyword) {
+        return auctionCatalogService.getAuctionsFiltered(pageable, category, status, minPrice, maxPrice, keyword);
+    }
+    
+
+
 }

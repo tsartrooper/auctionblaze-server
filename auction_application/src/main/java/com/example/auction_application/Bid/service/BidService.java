@@ -37,7 +37,7 @@ public class BidService {
     AuctionWebSocketHandler auctionWebSocketHandler;
 
     @Transactional
-    @CacheEvict(value = {"auctions", "activeAuctions", "closedAuctions", "categoryAuctions", "sellerAuctions", "status", "auction"}, allEntries = true)
+    @CacheEvict(value = {"auctions", "auctionsFiltered", "activeAuctions", "closedAuctions", "categoryAuctions", "sellerAuctions", "status", "auction"}, allEntries = true)
     public boolean createBid(BidRequestDTO bidDTO, Long bidderId){
         WebUser bidder = userRepository.findById(bidderId).get();
         
