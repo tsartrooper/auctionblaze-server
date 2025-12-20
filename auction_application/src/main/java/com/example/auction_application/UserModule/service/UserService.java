@@ -10,7 +10,6 @@ import com.example.auction_application.Bid.entity.Bid;
 import com.example.auction_application.Exceptions.UserAlreadyExistsException;
 import com.example.auction_application.UserModule.UserRepository;
 import com.example.auction_application.UserModule.dto.UserRequestDTO;
-import com.example.auction_application.UserModule.dto.UserResponseDTO;
 import com.example.auction_application.UserModule.entity.WebUser;
 
 import jakarta.transaction.Transactional;

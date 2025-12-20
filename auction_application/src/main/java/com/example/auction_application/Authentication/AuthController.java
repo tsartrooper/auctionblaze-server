@@ -12,6 +12,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
@@ -109,12 +110,14 @@ public class AuthController {
                 newUser.setUserEmail(email);
                 newUser.setUserName(name);
                 newUser.setPicture(picture);
-                newUser.setRole("ROLE_USER");
+                ArrayList<String> roles = new ArrayList<>();
+                roles.add("ROLE_USER");
+                newUser.setRoles(roles);
                 newUser.setAuthProvider("GOOGLE");
                 return userService.save(newUser);
             });
 
-            String jwt = jwtUtils.generateToken(email, webUser.getId());
+            String jwt = jwtUtils.generateToken(email, webUser.getId(), webUser.getRoles());
 
             return ResponseEntity.ok(Map.of("jwt", jwt));
 

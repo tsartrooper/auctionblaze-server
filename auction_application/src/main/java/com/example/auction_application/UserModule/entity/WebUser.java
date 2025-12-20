@@ -6,16 +6,16 @@ import java.util.List;
 import com.example.auction_application.AuctionListing.entity.AuctionListing;
 import com.example.auction_application.Bid.entity.Bid;
 
-import io.micrometer.common.lang.Nullable;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.UniqueConstraint;
 
 @Entity
 public class WebUser {
@@ -40,8 +40,9 @@ public class WebUser {
     private String authProvider;
 
     @Column(nullable = false)
-    private String role;
-    
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> roles = new ArrayList<>();
+
     @OneToMany(mappedBy = "bidder", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Bid> bids = new ArrayList<>();
 
@@ -58,7 +59,8 @@ public class WebUser {
         this.userName = userName;
         this.userEmail = userEmail;
         this.password = password;
-        this.role = role;
+        this.roles = new ArrayList<>();
+        this.roles.add(role);
     }
 
     public Long getId() {
@@ -96,12 +98,22 @@ public class WebUser {
         this.picture = picture;
     }
 
-    public String getRole() {
-        return role;
+    public List<String> getRoles() {
+        return roles;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
+    }
+    
+    public void addRole(String role) {
+        if(!this.roles.contains(role)) {
+            this.roles.add(role);
+        }
+    }
+    
+    public void removeRole(String role) {
+        this.roles.remove(role);
     }
 
     public List<Bid> getBids() {

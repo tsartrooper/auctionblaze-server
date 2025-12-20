@@ -1,8 +1,7 @@
 package com.example.auction_application.Authentication;
 
-import java.security.Key;
-import java.util.Base64;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.stereotype.Component;
 
@@ -29,8 +28,23 @@ public class JwtUtils {
         .compact();
     }
 
+    public String generateToken(String userEmail, Long userId, List<String> roles) {
+        return Jwts.builder()
+                .setSubject(userEmail)
+                .claim("userId", userId)
+                .claim("roles", roles)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + jwtConfigProperties.getExpirationLimit()))
+                .signWith(Keys.hmacShaKeyFor(jwtConfigProperties.getSecret().getBytes()))
+                .compact();
+    }
+
     public Long extractUserId(String token){
         return Long.parseLong(extractClaims(token).get("userId").toString());
+    }
+
+    public List<String> extractRoles(String token) {
+        return extractClaims(token).get("roles", List.class);
     }
 
     public Claims extractClaims(String token) {

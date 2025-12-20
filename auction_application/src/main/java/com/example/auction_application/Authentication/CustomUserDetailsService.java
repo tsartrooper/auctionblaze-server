@@ -7,7 +7,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.example.auction_application.UserModule.UserRepository;
 import com.example.auction_application.UserModule.entity.WebUser;
 import com.example.auction_application.UserModule.service.UserService;
 
@@ -26,7 +25,9 @@ public class CustomUserDetailsService implements UserDetailsService{
         return User.builder()
                     .username(email)
                     .password(user.getPassword() != null? user.getPassword() : "")
-                    .roles(user.getRole().replace("ROLE_", ""))
+                    .roles(user.getRoles().stream()
+                            .map(curr_role -> curr_role.replace("ROLE_", ""))
+                            .toArray(String[]::new))
                     .build();
     }
 
